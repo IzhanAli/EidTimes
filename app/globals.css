@@ -1,0 +1,192 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "leaflet/dist/leaflet.css";
+
+@layer base {
+  html, body {
+    background: #f6f1e6;
+    color: #171514;
+    min-height: 100%;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: #0f5132;
+    color: #f6f1e6;
+  }
+  hr {
+    border-color: #e3dcc8;
+  }
+  /* Subtle paper grain */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.04;
+    z-index: 0;
+    background-image: radial-gradient(rgba(0,0,0,0.6) 1px, transparent 1px);
+    background-size: 3px 3px;
+  }
+}
+
+@layer components {
+  .container-narrow {
+    max-width: 76rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+  .rule { border-top: 1px solid #e3dcc8; }
+
+  .eyebrow {
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    color: #a85d24;
+    font-weight: 600;
+  }
+  .eyebrow-muted {
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    color: #5b5b58;
+    font-weight: 500;
+  }
+  .field-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #5b5b58;
+    font-weight: 600;
+  }
+  .field-input {
+    width: 100%;
+    background: #fdfaf2;
+    border: 1px solid #e3dcc8;
+    padding: 0.625rem 0.75rem;
+    font-size: 0.9rem;
+    color: #171514;
+    border-radius: 2px;
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+  }
+  .field-input:focus {
+    outline: none;
+    border-color: #0f5132;
+    box-shadow: 0 0 0 3px rgba(15,81,50,0.14);
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    height: 2.25rem;
+    padding: 0 0.95rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: 2px;
+    transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+    border: 1px solid transparent;
+    cursor: pointer;
+  }
+  .btn-primary {
+    background: #0f5132;
+    color: #f6f1e6;
+  }
+  .btn-primary:hover { background: #0a3d26; }
+  .btn-secondary {
+    background: #c97a3e;
+    color: #fdfaf2;
+  }
+  .btn-secondary:hover { background: #a85d24; }
+  .btn-ghost {
+    background: transparent;
+    color: #171514;
+    border-color: #d8d0b8;
+  }
+  .btn-ghost:hover { background: #efe8d4; }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    height: 1.25rem;
+    padding: 0 0.5rem;
+    font-size: 0.66rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-radius: 2px;
+    border: 1px solid transparent;
+  }
+  .badge-eidgah   { background: #d6e6da; color: #0a3d26; border-color: #b9d2bf; }
+  .badge-masjid   { background: #ecd5d8; color: #6b1f2a; border-color: #d8b5ba; }
+  .badge-ground   { background: #efe4bf; color: #6c521a; border-color: #d8c489; }
+
+  /* Time-proximity chip: green (far) → amber (approaching) → red (soon). */
+  .prox-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    height: 1.4rem;
+    padding: 0 0.5rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    border: 1px solid transparent;
+    white-space: nowrap;
+  }
+  .prox-dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 9999px;
+    background: currentColor;
+    flex: none;
+  }
+  .prox-soon        { background: #f7dcd7; color: #8c1d18; border-color: #e3b1aa; }
+  .prox-approaching { background: #f5e3cf; color: #8a5212; border-color: #e0c596; }
+  .prox-far         { background: #d6e6da; color: #0a3d26; border-color: #b9d2bf; }
+  .prox-passed      { background: #ece9e0; color: #6b6b66; border-color: #d8d0b8; }
+  .prox-unknown     { background: #ece9e0; color: #6b6b66; border-color: #d8d0b8; }
+
+  /* Left accent bar on cards, matched to the proximity colour. */
+  .card-accent-soon        { border-left: 3px solid #b3261e; }
+  .card-accent-approaching { border-left: 3px solid #c97a3e; }
+  .card-accent-far         { border-left: 3px solid #0f5132; }
+  .card-accent-passed      { border-left: 3px solid #c9c2af; }
+  .card-accent-unknown     { border-left: 3px solid #e3dcc8; }
+}
+
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  background: #eee7d4;
+  z-index: 0;
+}
+
+.eidgah-pin {
+  width: 1.1rem;
+  height: 1.1rem;
+  display: block;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  border: 2px solid #fdfaf2;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+.eidgah-pin.type-eidgah { background: #0f5132; }
+.eidgah-pin.type-masjid { background: #6b1f2a; }
+.eidgah-pin.type-open_ground { background: #c97a3e; }
+
+.user-pin {
+  width: 0.95rem;
+  height: 0.95rem;
+  display: block;
+  border-radius: 9999px;
+  background: #1f3d5c;
+  border: 2px solid #fdfaf2;
+  box-shadow: 0 0 0 3px rgba(31, 61, 92, 0.25);
+}
