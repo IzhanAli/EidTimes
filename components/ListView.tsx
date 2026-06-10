@@ -116,6 +116,7 @@ function EidgahCard({
   showPreview,
   occasion,
   onEdit,
+  index = 0,
 }: {
   e: Eidgah;
   now: Date | null;
@@ -124,6 +125,7 @@ function EidgahCard({
   showPreview: boolean;
   occasion: Occasion;
   onEdit: (e: Eidgah) => void;
+  index?: number;
 }) {
   // The list is pre-filtered to venues that hold this occasion, so a time exists.
   const ptime = timeForOccasion(e, occasion) ?? "";
@@ -214,9 +216,10 @@ function EidgahCard({
 
   return (
     <li
-      className={`bg-paper-card border border-paper-line rounded-sm overflow-hidden flex hover:border-emerald/60 transition card-accent-${prox} ${
+      className={`bg-paper-card border border-paper-line rounded-sm overflow-hidden flex hover:border-emerald/60 card-enter card-lift card-accent-${prox} ${
         isList ? "flex-row items-stretch" : "flex-col"
       }`}
+      style={{ animationDelay: `${Math.min(index, 12) * 45}ms` }}
     >
       {/* list: content left, map right · grid: map top, content below */}
       {isList ? (
@@ -424,9 +427,10 @@ export default function ListView({
                 <span className="eyebrow-muted">{items.length} listed</span>
               </div>
               <ul className={gridClass}>
-                {items.map((e) => (
+                {items.map((e, i) => (
                   <EidgahCard
-                    key={e.id}
+                    key={`${occasion}-${e.id}`}
+                    index={i}
                     e={e}
                     now={now}
                     userLoc={userLoc}
@@ -442,9 +446,10 @@ export default function ListView({
         </div>
       ) : (
         <ul className={gridClass}>
-          {sortedFlat.map((e) => (
+          {sortedFlat.map((e, i) => (
             <EidgahCard
-              key={e.id}
+              key={`${occasion}-${e.id}`}
+              index={i}
               e={e}
               now={now}
               userLoc={userLoc}

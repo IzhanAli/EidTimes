@@ -3,17 +3,40 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { MoonStars, Sparkle, Plus } from "@phosphor-icons/react";
+import { Plus } from "@phosphor-icons/react";
 import type { Eidgah, GeoStatus, LatLng, Occasion } from "@/lib/types";
-import { OCCASIONS, hasOccasion } from "@/lib/types";
+import { OCCASIONS, hasOccasion, occasionLabel } from "@/lib/types";
 import { countryName } from "@/lib/countries";
 import ListView from "./ListView";
 import AddEidgahDrawer from "./AddEidgahDrawer";
 import CityPicker from "./CityPicker";
+import {
+  AdhaScene,
+  CrescentGlyph,
+  FitrScene,
+  KaabaGlyph,
+  MosqueSkyline,
+  StarDivider,
+} from "./decor/EidMotifs";
 
-const OCCASION_ICON: Record<Occasion, typeof MoonStars> = {
-  eid_al_fitr: MoonStars,
-  eid_al_adha: Sparkle,
+const OCCASION_ICON: Record<Occasion, typeof CrescentGlyph> = {
+  eid_al_fitr: CrescentGlyph,
+  eid_al_adha: KaabaGlyph,
+};
+
+// Editorial copy for the hero band, per occasion.
+const OCCASION_HERO: Record<
+  Occasion,
+  { eyebrow: string; line: string }
+> = {
+  eid_al_fitr: {
+    eyebrow: "1 Shawwal · The festival of breaking the fast",
+    line: "After a month of fasting, the community gathers at first light. Find where your city prays — and when.",
+  },
+  eid_al_adha: {
+    eyebrow: "10 Dhul-Hijjah · The festival of sacrifice",
+    line: "In the days of pilgrimage, the takbeer rings out from every ground. Find where your city prays — and when.",
+  },
 };
 
 const MapView = dynamic(() => import("./MapView"), {
@@ -52,6 +75,12 @@ export default function Home({
   const [userLoc, setUserLoc] = useState<LatLng | null>(null);
   const [geoStatus, setGeoStatus] = useState<GeoStatus>("idle");
   const [geoError, setGeoError] = useState<string | null>(null);
+
+  // The occasion picks the page-wide theme: emerald/gold for Eid al-Fitr,
+  // terracotta/amber for Eid al-Adha (variable blocks in globals.css).
+  useEffect(() => {
+    document.documentElement.dataset.occasion = occasion;
+  }, [occasion]);
 
   const requestLocation = useCallback(() => {
     if (typeof navigator === "undefined" || !navigator.geolocation) {
@@ -165,8 +194,11 @@ export default function Home({
         <div className="container-narrow py-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-6">
             <Link href="/" className="flex items-center gap-3">
-              <div className="h-9 w-9 grid place-items-center bg-emerald text-paper rounded-sm font-serif text-lg shadow-sm">
-                E
+              <div className="h-9 w-9 grid place-items-center bg-emerald text-paper rounded-sm shadow-sm transition-colors">
+                {(() => {
+                  const LogoIcon = OCCASION_ICON[occasion];
+                  return <LogoIcon key={occasion} className="h-5 w-5 animate-pop" />;
+                })()}
               </div>
               <div className="leading-tight">
                 <div className="font-serif text-lg text-ink">Eidgah Times</div>
@@ -202,7 +234,12 @@ export default function Home({
                     i > 0 ? "border-l border-paper-line" : ""
                   } ${active ? "bg-emerald text-paper" : "text-ink hover:bg-emerald-soft"}`}
                 >
-                  <Icon size={16} weight={active ? "fill" : "regular"} />
+                  <span
+                    key={`${o.value}-${active}`}
+                    className={`inline-flex ${active ? "animate-pop" : ""}`}
+                  >
+                    <Icon className="h-4 w-4" />
+                  </span>
                   <span className="hidden md:inline">{o.label}</span>
                 </button>
               );
@@ -224,15 +261,46 @@ export default function Home({
               </button>
             )}
             <button
-              className="btn btn-primary inline-flex items-center gap-1.5"
+              className="btn btn-add inline-flex items-center gap-1.5"
               onClick={openAdd}
             >
-              <Plus size={16} weight="bold" />
+              <Plus size={16} weight="bold" className="btn-add-icon" />
               Add venue
             </button>
           </div>
         </div>
       </header>
+
+      {/* Occasion hero — deep themed band with the animated scene for the
+          active Eid. Keyed by occasion so switching replays the entrance. */}
+      <section className="hero-band" aria-label={`${occasionLabel(occasion)} — currently showing`}>
+        <div className="container-narrow relative z-10 py-10 sm:py-14 flex items-center justify-between gap-10">
+          <div key={occasion} className="animate-fade-up max-w-xl">
+            <div
+              className="text-[0.68rem] uppercase tracking-[0.22em] font-semibold"
+              style={{ color: "var(--hero-gold)" }}
+            >
+              {OCCASION_HERO[occasion].eyebrow}
+            </div>
+            <h1 className="font-serif hero-title mt-3">
+              {occasionLabel(occasion)}{" "}
+              <span className="hero-greeting block sm:inline text-[0.55em] sm:ml-1">
+                Eid Mubarak
+              </span>
+            </h1>
+            <p className="mt-4 text-sm sm:text-base text-paper/75 leading-relaxed max-w-md">
+              {OCCASION_HERO[occasion].line}
+            </p>
+          </div>
+          <div key={`${occasion}-art`} className="hidden md:block animate-fade-up shrink-0">
+            {occasion === "eid_al_fitr" ? (
+              <FitrScene className="w-[320px] lg:w-[380px] h-auto" />
+            ) : (
+              <AdhaScene className="w-[320px] lg:w-[380px] h-auto" />
+            )}
+          </div>
+        </div>
+      </section>
 
       <main className="container-narrow py-10">
         <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
@@ -283,17 +351,24 @@ export default function Home({
         )}
       </main>
 
-      <footer className="border-t border-paper-line mt-16 bg-emerald-soft/30">
-        <div className="container-narrow py-8 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between text-sm text-ink-muted">
-          <div>
-            <span className="font-serif text-emerald-deep">Eidgah Times</span> — community
-            directory. Verify locally before travelling.
+      <div className="mt-16">
+        {/* skyline bleeds into the footer block below it */}
+        <MosqueSkyline className="block w-full h-14 sm:h-20 text-emerald-deep translate-y-px transition-colors" />
+        <footer className="bg-emerald-deep text-paper/80 transition-colors">
+          <div className="container-narrow py-10">
+            <StarDivider className="text-paper/70 mb-8" />
+            <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between text-sm">
+              <div>
+                <span className="font-serif text-paper">Eidgah Times</span> — community
+                directory. Verify locally before travelling.
+              </div>
+              <div className="text-xs text-paper/55">
+                Map tiles © OpenStreetMap contributors.
+              </div>
+            </div>
           </div>
-          <div className="text-xs text-ink-subtle">
-            Map tiles © OpenStreetMap contributors.
-          </div>
-        </div>
-      </footer>
+        </footer>
+      </div>
 
       <AddEidgahDrawer
         open={drawerOpen}

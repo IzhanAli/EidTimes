@@ -4,20 +4,63 @@
 
 @import "leaflet/dist/leaflet.css";
 
+/* ---------------------------------------------------------------------------
+ * Occasion themes. RGB triplets so Tailwind alpha modifiers keep working
+ * (tailwind.config.ts maps paper/emerald/saffron tokens onto these vars).
+ *
+ *   Eid al-Fitr — "moonlit emerald": cool ivory paper, emerald + gold.
+ *   Eid al-Adha — "pilgrimage clay": warm sand paper, terracotta + amber.
+ *
+ * `data-occasion` is set on <html> by components/Home.tsx.
+ * ------------------------------------------------------------------------- */
+:root,
+[data-occasion="eid_al_fitr"] {
+  --paper: 245 241 230;
+  --paper-card: 253 250 242;
+  --paper-line: 227 220 200;
+  --accent: 15 81 50;
+  --accent-deep: 10 61 38;
+  --accent-soft: 214 230 218;
+  --accent2: 184 134 43;
+  --accent2-deep: 140 100 26;
+  --accent2-soft: 240 228 191;
+  --hero-bg-1: #0b2e20;
+  --hero-bg-2: #14503a;
+  --hero-gold: #e3b54d;
+  --glow: #f3c969;
+}
+
+[data-occasion="eid_al_adha"] {
+  --paper: 249 240 227;
+  --paper-card: 255 250 241;
+  --paper-line: 236 219 195;
+  --accent: 148 56 27;
+  --accent-deep: 107 36 14;
+  --accent-soft: 243 220 207;
+  --accent2: 178 94 26;
+  --accent2-deep: 138 70 16;
+  --accent2-soft: 246 227 200;
+  --hero-bg-1: #4f1d0a;
+  --hero-bg-2: #7a2f12;
+  --hero-gold: #e9c25f;
+  --glow: #f6e0a4;
+}
+
 @layer base {
   html, body {
-    background: #f6f1e6;
+    background: rgb(var(--paper));
     color: #171514;
     min-height: 100%;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    transition: background-color 600ms ease;
   }
   ::selection {
-    background: #0f5132;
-    color: #f6f1e6;
+    background: rgb(var(--accent));
+    color: rgb(var(--paper));
   }
   hr {
-    border-color: #e3dcc8;
+    border-color: rgb(var(--paper-line));
   }
   /* Subtle paper grain */
   body::before {
@@ -40,13 +83,13 @@
     padding-left: 1.25rem;
     padding-right: 1.25rem;
   }
-  .rule { border-top: 1px solid #e3dcc8; }
+  .rule { border-top: 1px solid rgb(var(--paper-line)); }
 
   .eyebrow {
     text-transform: uppercase;
     font-size: 0.7rem;
     letter-spacing: 0.18em;
-    color: #a85d24;
+    color: rgb(var(--accent2-deep));
     font-weight: 600;
   }
   .eyebrow-muted {
@@ -65,8 +108,8 @@
   }
   .field-input {
     width: 100%;
-    background: #fdfaf2;
-    border: 1px solid #e3dcc8;
+    background: rgb(var(--paper-card));
+    border: 1px solid rgb(var(--paper-line));
     padding: 0.625rem 0.75rem;
     font-size: 0.9rem;
     color: #171514;
@@ -75,8 +118,8 @@
   }
   .field-input:focus {
     outline: none;
-    border-color: #0f5132;
-    box-shadow: 0 0 0 3px rgba(15,81,50,0.14);
+    border-color: rgb(var(--accent));
+    box-shadow: 0 0 0 3px rgb(var(--accent) / 0.14);
   }
   .btn {
     display: inline-flex;
@@ -88,26 +131,65 @@
     font-size: 0.85rem;
     font-weight: 500;
     border-radius: 2px;
-    transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+    transition: background 120ms ease, color 120ms ease, border-color 120ms ease,
+      transform 120ms ease, box-shadow 120ms ease;
     border: 1px solid transparent;
     cursor: pointer;
   }
+  .btn:active { transform: translateY(1px); }
   .btn-primary {
-    background: #0f5132;
-    color: #f6f1e6;
+    background: rgb(var(--accent));
+    color: rgb(var(--paper));
   }
-  .btn-primary:hover { background: #0a3d26; }
+  .btn-primary:hover { background: rgb(var(--accent-deep)); }
   .btn-secondary {
-    background: #c97a3e;
-    color: #fdfaf2;
+    background: rgb(var(--accent2));
+    color: rgb(var(--paper-card));
   }
-  .btn-secondary:hover { background: #a85d24; }
+  .btn-secondary:hover { background: rgb(var(--accent2-deep)); }
   .btn-ghost {
     background: transparent;
     color: #171514;
-    border-color: #d8d0b8;
+    border-color: rgb(var(--paper-line));
   }
-  .btn-ghost:hover { background: #efe8d4; }
+  .btn-ghost:hover { background: rgb(var(--accent-soft) / 0.45); }
+
+  /* "Add venue" call-to-action: themed gradient, gold sheen sweep on hover,
+     and a plus icon that turns into place. Distinct from plain btn-primary. */
+  .btn-add {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgb(var(--accent)) 0%, rgb(var(--accent-deep)) 100%);
+    color: rgb(var(--paper));
+    border-color: rgb(var(--accent-deep));
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.14);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+  .btn-add::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -80%;
+    width: 45%;
+    background: linear-gradient(100deg, transparent, rgb(255 255 255 / 0.32), transparent);
+    transform: skewX(-20deg);
+    transition: left 480ms ease;
+    pointer-events: none;
+  }
+  .btn-add:hover::after { left: 130%; }
+  .btn-add:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.14),
+      0 8px 18px -8px rgb(var(--accent-deep) / 0.75),
+      0 0 0 1px rgb(var(--accent-deep));
+  }
+  .btn-add .btn-add-icon {
+    transition: transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .btn-add:hover .btn-add-icon { transform: rotate(90deg) scale(1.15); }
 
   .badge {
     display: inline-flex;
@@ -121,9 +203,9 @@
     border-radius: 2px;
     border: 1px solid transparent;
   }
-  .badge-eidgah   { background: #d6e6da; color: #0a3d26; border-color: #b9d2bf; }
+  .badge-eidgah   { background: rgb(var(--accent-soft)); color: rgb(var(--accent-deep)); border-color: rgb(var(--accent) / 0.25); }
   .badge-masjid   { background: #ecd5d8; color: #6b1f2a; border-color: #d8b5ba; }
-  .badge-ground   { background: #efe4bf; color: #6c521a; border-color: #d8c489; }
+  .badge-ground   { background: rgb(var(--accent2-soft)); color: rgb(var(--accent2-deep)); border-color: rgb(var(--accent2) / 0.35); }
 
   /* Time-proximity chip: green (far) → amber (approaching) → red (soon). */
   .prox-chip {
@@ -148,6 +230,7 @@
     flex: none;
   }
   .prox-soon        { background: #f7dcd7; color: #8c1d18; border-color: #e3b1aa; }
+  .prox-soon .prox-dot { animation: pulse-dot 1.5s ease-out infinite; }
   .prox-approaching { background: #f5e3cf; color: #8a5212; border-color: #e0c596; }
   .prox-far         { background: #d6e6da; color: #0a3d26; border-color: #b9d2bf; }
   .prox-passed      { background: #ece9e0; color: #6b6b66; border-color: #d8d0b8; }
@@ -155,10 +238,100 @@
 
   /* Left accent bar on cards, matched to the proximity colour. */
   .card-accent-soon        { border-left: 3px solid #b3261e; }
-  .card-accent-approaching { border-left: 3px solid #c97a3e; }
-  .card-accent-far         { border-left: 3px solid #0f5132; }
+  .card-accent-approaching { border-left: 3px solid rgb(var(--accent2)); }
+  .card-accent-far         { border-left: 3px solid rgb(var(--accent)); }
   .card-accent-passed      { border-left: 3px solid #c9c2af; }
-  .card-accent-unknown     { border-left: 3px solid #e3dcc8; }
+  .card-accent-unknown     { border-left: 3px solid rgb(var(--paper-line)); }
+
+  /* Staggered entrance + lift on hover for directory cards. */
+  .card-enter {
+    animation: fade-up 480ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .card-lift {
+    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  }
+  .card-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px -14px rgb(var(--accent-deep) / 0.45);
+  }
+
+  /* -------------------------------------------------------------------------
+   * Hero band — deep gradient field with a faint eight-point-star lattice
+   * drifting behind the occasion artwork. Colours follow the active theme.
+   * ----------------------------------------------------------------------- */
+  .hero-band {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(140deg, var(--hero-bg-1) 0%, var(--hero-bg-2) 100%);
+    color: rgb(var(--paper));
+    transition: background 600ms ease;
+  }
+  .hero-band::before {
+    content: "";
+    position: absolute;
+    inset: -50%;
+    pointer-events: none;
+    opacity: 0.07;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cpath d='M28 6l3.1 7.2 7.2-2.8-2.8 7.2L42.7 21l-7.2 3.1 2.8 7.2-7.2-2.8L28 35.7l-3.1-7.2-7.2 2.8 2.8-7.2L13.3 21l7.2-3.1-2.8-7.2 7.2 2.8z' fill='%23ffffff'/%3E%3C/svg%3E");
+    background-size: 56px 56px;
+    animation: lattice-drift 60s linear infinite;
+  }
+  .hero-title {
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+  }
+  .hero-greeting {
+    color: var(--hero-gold);
+    font-style: italic;
+  }
+}
+
+/* --------------------------- motif animations ---------------------------- */
+.motif-twinkle { animation: twinkle 2.8s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.motif-sway    { animation: sway 4.5s ease-in-out infinite; transform-box: fill-box; transform-origin: top center; }
+.motif-float   { animation: floaty 6s ease-in-out infinite; }
+.motif-glow    { animation: glow 3s ease-in-out infinite; }
+.motif-rays    { animation: rays 5s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.25; transform: scale(0.8); }
+  50%      { opacity: 1; transform: scale(1); }
+}
+@keyframes sway {
+  0%, 100% { transform: rotate(-4deg); }
+  50%      { transform: rotate(4deg); }
+}
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-7px); }
+}
+@keyframes glow {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 1; }
+}
+@keyframes rays {
+  0%, 100% { opacity: 0.3; transform: scale(0.97); }
+  50%      { opacity: 0.65; transform: scale(1); }
+}
+@keyframes pulse-dot {
+  0%   { box-shadow: 0 0 0 0 rgba(140, 29, 24, 0.45); }
+  100% { box-shadow: 0 0 0 6px rgba(140, 29, 24, 0); }
+}
+@keyframes lattice-drift {
+  from { transform: translate(0, 0); }
+  to   { transform: translate(56px, 56px); }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motif-twinkle, .motif-sway, .motif-float, .motif-glow, .motif-rays,
+  .hero-band::before, .prox-soon .prox-dot, .card-enter {
+    animation: none;
+  }
 }
 
 .leaflet-container {
@@ -174,12 +347,12 @@
   display: block;
   border-radius: 50% 50% 50% 0;
   transform: rotate(-45deg);
-  border: 2px solid #fdfaf2;
+  border: 2px solid rgb(var(--paper-card));
   box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
-.eidgah-pin.type-eidgah { background: #0f5132; }
+.eidgah-pin.type-eidgah { background: rgb(var(--accent)); }
 .eidgah-pin.type-masjid { background: #6b1f2a; }
-.eidgah-pin.type-open_ground { background: #c97a3e; }
+.eidgah-pin.type-open_ground { background: rgb(var(--accent2)); }
 
 .user-pin {
   width: 0.95rem;
@@ -187,6 +360,6 @@
   display: block;
   border-radius: 9999px;
   background: #1f3d5c;
-  border: 2px solid #fdfaf2;
+  border: 2px solid rgb(var(--paper-card));
   box-shadow: 0 0 0 3px rgba(31, 61, 92, 0.25);
 }
