@@ -191,9 +191,9 @@ export default function Home({
   return (
     <>
       <header className="border-b border-paper-line bg-paper/80 backdrop-blur sticky top-0 z-30">
-        <div className="container-narrow py-4 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-6">
-            <Link href="/" className="flex items-center gap-3">
+        <div className="container-narrow py-3 sm:py-4 flex items-center justify-between gap-2 sm:gap-4">
+          <div className="flex items-center gap-3 sm:gap-6 min-w-0">
+            <Link href="/" className="flex items-center gap-2.5 sm:gap-3 min-w-0">
               <div className="h-9 w-9 grid place-items-center bg-emerald text-paper rounded-sm shadow-sm transition-colors">
                 {(() => {
                   const LogoIcon = OCCASION_ICON[occasion];
@@ -201,8 +201,8 @@ export default function Home({
                 })()}
               </div>
               <div className="leading-tight">
-                <div className="font-serif text-lg text-ink">Eidgah Times</div>
-                <div className="eyebrow">A community directory</div>
+                <div className="font-serif text-lg text-ink whitespace-nowrap">Eidgah Times</div>
+                <div className="eyebrow hidden sm:block">A community directory</div>
               </div>
             </Link>
             <nav className="hidden sm:flex items-center gap-4 text-sm">
@@ -261,11 +261,11 @@ export default function Home({
               </button>
             )}
             <button
-              className="btn btn-add inline-flex items-center gap-1.5"
+              className="btn btn-add inline-flex items-center gap-1.5 whitespace-nowrap shrink-0"
               onClick={openAdd}
             >
               <Plus size={16} weight="bold" className="btn-add-icon" />
-              Add venue
+              Add<span className="hidden sm:inline">&nbsp;venue</span>
             </button>
           </div>
         </div>
@@ -274,7 +274,18 @@ export default function Home({
       {/* Occasion hero — deep themed band with the animated scene for the
           active Eid. Keyed by occasion so switching replays the entrance. */}
       <section className="hero-band" aria-label={`${occasionLabel(occasion)} — currently showing`}>
-        <div className="container-narrow relative z-10 py-10 sm:py-14 flex items-center justify-between gap-10">
+        {/* on small screens the scene becomes a faint backdrop instead */}
+        <div
+          aria-hidden
+          className="absolute inset-y-0 -right-8 w-64 md:hidden opacity-25 pointer-events-none flex items-center"
+        >
+          {occasion === "eid_al_fitr" ? (
+            <FitrScene className="w-full h-auto" />
+          ) : (
+            <AdhaScene className="w-full h-auto" />
+          )}
+        </div>
+        <div className="container-narrow relative z-10 py-8 sm:py-14 flex items-center justify-between gap-10">
           <div key={occasion} className="animate-fade-up max-w-xl">
             <div
               className="text-[0.68rem] uppercase tracking-[0.22em] font-semibold"
@@ -353,7 +364,7 @@ export default function Home({
 
       <div className="mt-16">
         {/* skyline bleeds into the footer block below it */}
-        <MosqueSkyline className="block w-full h-14 sm:h-20 text-emerald-deep translate-y-px transition-colors" />
+        <MosqueSkyline className="block w-full h-auto text-emerald-deep translate-y-px transition-colors" />
         <footer className="bg-emerald-deep text-paper/80 transition-colors">
           <div className="container-narrow py-10">
             <StarDivider className="text-paper/70 mb-8" />

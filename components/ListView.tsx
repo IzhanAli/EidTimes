@@ -139,8 +139,8 @@ function EidgahCard({
       href={osmUrl(e)}
       target="_blank"
       rel="noreferrer"
-      className={`block relative bg-paper-line/40 group ${
-        isList ? "w-40 sm:w-52 shrink-0 min-h-[7rem]" : "h-32"
+      className={`relative bg-paper-line/40 group ${
+        isList ? "hidden sm:block w-44 md:w-52 shrink-0 min-h-[7rem]" : "block h-32"
       }`}
       title="Open in OpenStreetMap"
     >
