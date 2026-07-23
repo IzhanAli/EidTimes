@@ -35,7 +35,7 @@ const OCCASION_HERO: Record<
   },
   eid_al_adha: {
     eyebrow: "10 Dhul-Hijjah · The festival of sacrifice",
-    line: "In the days of pilgrimage, the takbeer rings out from every ground. Find where your city prays — and when.",
+    line: "In the days of pilgrimage, the takbeer calls out from every ground. Find where your city prays — and when.",
   },
 };
 
@@ -355,6 +355,8 @@ export default function Home({
             geoError={geoError}
             onRequestLocation={requestLocation}
             onEdit={openEdit}
+            onAdd={openAdd}
+            emptyCity={filter?.city}
             showMapPreviews={!!filter?.city}
           />
         ) : (
