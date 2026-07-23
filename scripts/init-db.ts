@@ -46,7 +46,20 @@ async function main() {
     INSERT INTO app_config (key, value) VALUES ('active_occasion', 'eid_al_fitr')
     ON CONFLICT (key) DO NOTHING
   `;
-  console.log("eidgahs + app_config tables ready.");
+
+  // Per-IP rate limiting store for write endpoints. One row per accepted hit;
+  // rows are pruned by window on each check (see lib/rate-limit.ts).
+  await sql`
+    CREATE TABLE IF NOT EXISTS rate_hits (
+      id     BIGSERIAL PRIMARY KEY,
+      ip     TEXT NOT NULL,
+      bucket TEXT NOT NULL,
+      ts     TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `;
+  await sql`CREATE INDEX IF NOT EXISTS rate_hits_lookup_idx ON rate_hits (ip, bucket, ts)`;
+
+  console.log("eidgahs + app_config + rate_hits tables ready.");
 }
 
 main().catch((err) => {

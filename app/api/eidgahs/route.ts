@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { listEidgahs, createEidgah } from "@/lib/db";
 import { parseEidgahInput } from "@/lib/validate";
+import { clientIp, rateLimit, tooManyRequests, WRITE_RULES } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -18,6 +19,9 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  const limit = await rateLimit(clientIp(req), "write", WRITE_RULES);
+  if (!limit.ok) return tooManyRequests(limit.retryAfter);
+
   let body: unknown;
   try {
     body = await req.json();

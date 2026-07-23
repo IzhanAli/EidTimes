@@ -247,6 +247,7 @@ export default function ListView({
   onEdit,
   onAdd,
   emptyCity,
+  loading = false,
   showMapPreviews = false,
 }: {
   eidgahs: Eidgah[];
@@ -258,6 +259,7 @@ export default function ListView({
   onEdit: (e: Eidgah) => void;
   onAdd?: () => void;
   emptyCity?: string;
+  loading?: boolean;
   showMapPreviews?: boolean;
 }) {
   const [query, setQuery] = useState("");
@@ -415,21 +417,30 @@ export default function ListView({
 
       {filtered.length === 0 ? (
         <div className="border border-dashed border-paper-line rounded-sm px-6 py-10 text-center bg-paper-card">
-          <p className="text-ink-muted text-sm">
-            {query.trim()
-              ? `No venues match “${query.trim()}”.`
-              : emptyCity
-                ? `No Eid prayer venues listed in ${emptyCity} yet.`
-                : "No Eid prayer venues listed here yet."}
-          </p>
-          {onAdd && (
-            <button
-              onClick={onAdd}
-              className="btn btn-primary inline-flex items-center gap-1.5 mt-4"
-            >
-              <MapPin size={15} weight="fill" />
-              {emptyCity ? `Add the first venue in ${emptyCity}` : "Add the first venue"}
-            </button>
+          {loading ? (
+            <p className="text-ink-muted text-sm inline-flex items-center gap-2">
+              <span className="h-3.5 w-3.5 rounded-full border-2 border-emerald border-t-transparent animate-spin" />
+              Loading prayer venues…
+            </p>
+          ) : (
+            <>
+              <p className="text-ink-muted text-sm">
+                {query.trim()
+                  ? `No venues match “${query.trim()}”.`
+                  : emptyCity
+                    ? `No Eid prayer venues listed in ${emptyCity} yet.`
+                    : "No Eid prayer venues listed here yet."}
+              </p>
+              {onAdd && (
+                <button
+                  onClick={onAdd}
+                  className="btn btn-primary inline-flex items-center gap-1.5 mt-4"
+                >
+                  <MapPin size={15} weight="fill" />
+                  {emptyCity ? `Add the first venue in ${emptyCity}` : "Add the first venue"}
+                </button>
+              )}
+            </>
           )}
         </div>
       ) : sort === "city" ? (

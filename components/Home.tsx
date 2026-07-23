@@ -3,7 +3,7 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Plus } from "@phosphor-icons/react";
+import { Plus, MapPin } from "@phosphor-icons/react";
 import type { Eidgah, GeoStatus, LatLng, Occasion } from "@/lib/types";
 import { OCCASIONS, hasOccasion, occasionLabel } from "@/lib/types";
 import { countryName } from "@/lib/countries";
@@ -75,6 +75,10 @@ export default function Home({
   const [userLoc, setUserLoc] = useState<LatLng | null>(null);
   const [geoStatus, setGeoStatus] = useState<GeoStatus>("idle");
   const [geoError, setGeoError] = useState<string | null>(null);
+  // If SSR came back empty (e.g. a cold database on the first request), we're
+  // still loading until the client refetch lands — distinguishes "loading" from
+  // a genuinely empty city so the list isn't misreported as absent.
+  const [loaded, setLoaded] = useState(initial.length > 0);
 
   // The occasion picks the page-wide theme: emerald/gold for Eid al-Fitr,
   // terracotta/amber for Eid al-Adha (variable blocks in globals.css).
@@ -139,17 +143,23 @@ export default function Home({
     };
   }, [detectedCountry]);
 
-  // Refresh data on focus
-  useEffect(() => {
-    function onFocus() {
-      fetch("/api/eidgahs")
-        .then((r) => r.json())
-        .then((j) => Array.isArray(j.data) && setEidgahs(j.data))
-        .catch(() => {});
-    }
-    window.addEventListener("focus", onFocus);
-    return () => window.removeEventListener("focus", onFocus);
+  // Pull the latest list from the API. Used on mount (so a cold-DB SSR that
+  // returned nothing still fills in promptly) and whenever the tab regains focus.
+  const refresh = useCallback(() => {
+    return fetch("/api/eidgahs")
+      .then((r) => r.json())
+      .then((j) => {
+        if (Array.isArray(j.data)) setEidgahs(j.data);
+      })
+      .catch(() => {})
+      .finally(() => setLoaded(true));
   }, []);
+
+  useEffect(() => {
+    refresh();
+    window.addEventListener("focus", refresh);
+    return () => window.removeEventListener("focus", refresh);
+  }, [refresh]);
 
   function commitFilter(next: Filter) {
     setFilter(next);
@@ -314,6 +324,25 @@ export default function Home({
       </section>
 
       <main className="container-narrow py-10">
+        {/* Mobile-only city control — the header chip is hidden below sm, so
+            without this there'd be no way to change city on a phone. */}
+        {filter && (
+          <button
+            onClick={() => setPickerOpen(true)}
+            className="sm:hidden w-full flex items-center justify-between gap-2 bg-paper-card border border-paper-line px-3 h-11 rounded-sm text-sm mb-5 hover:border-emerald transition"
+            title="Change city"
+          >
+            <span className="flex items-center gap-2 min-w-0">
+              <MapPin size={16} weight="fill" className="text-emerald shrink-0" />
+              <span className="text-ink-subtle text-xs uppercase tracking-widest shrink-0">
+                {countryName(filter.country)}
+              </span>
+              <span className="text-ink font-medium truncate">{filter.city}</span>
+            </span>
+            <span className="text-emerald shrink-0">Change</span>
+          </button>
+        )}
+
         <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
           <div
             role="tablist"
@@ -357,6 +386,7 @@ export default function Home({
             onEdit={openEdit}
             onAdd={openAdd}
             emptyCity={filter?.city}
+            loading={!loaded}
             showMapPreviews={!!filter?.city}
           />
         ) : (
