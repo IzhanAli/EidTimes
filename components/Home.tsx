@@ -202,7 +202,7 @@ export default function Home({
               </div>
               <div className="leading-tight">
                 <div className="font-serif text-lg text-ink whitespace-nowrap">Eidgah Times</div>
-                <div className="eyebrow hidden sm:block">A community directory</div>
+                <div className="eyebrow hidden sm:block">Salat-ul-Eidain</div>
               </div>
             </Link>
             <nav className="hidden sm:flex items-center gap-4 text-sm">
@@ -229,7 +229,7 @@ export default function Home({
                   role="tab"
                   aria-selected={active}
                   onClick={() => setOccasion(o.value)}
-                  title={`Show ${o.label} entries`}
+                  title={`Show ${o.label} eidgahs`}
                   className={`px-3 inline-flex items-center gap-1.5 text-sm transition ${
                     i > 0 ? "border-l border-paper-line" : ""
                   } ${active ? "bg-emerald text-paper" : "text-ink hover:bg-emerald-soft"}`}
@@ -370,8 +370,8 @@ export default function Home({
             <StarDivider className="text-paper/70 mb-8" />
             <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between text-sm">
               <div>
-                <span className="font-serif text-paper">Eidgah Times</span> — community
-                directory. Verify locally before travelling.
+                <span className="font-serif text-paper">Eidgah Times</span> — crowd-verified
+                prayer times. Confirm locally before travelling.
               </div>
               <div className="text-xs text-paper/55">
                 Map tiles © OpenStreetMap contributors.

@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 export const metadata = {
   title: "About — Eidgah Times",
   description:
-    "What Eidgah Times is: a community-maintained directory of Eid prayer locations and times.",
+    "What Eidgah Times is: crowd-verified Eid prayer locations and times.",
 };
 
 export default async function AboutPage() {
@@ -42,7 +42,7 @@ export default async function AboutPage() {
               </div>
               <div className="leading-tight">
                 <div className="font-serif text-lg text-ink">Eidgah Times</div>
-                <div className="eyebrow">A community directory</div>
+                <div className="eyebrow">Salat-ul-Eidain</div>
               </div>
             </Link>
             <nav className="hidden sm:flex items-center gap-4 text-sm">
@@ -75,7 +75,7 @@ export default async function AboutPage() {
             by city and viewable on a map. Anyone can add an entry.
           </p>
           <p className="mt-4 text-ink-muted leading-relaxed">
-            Entries are submitted by visitors and shown as-is. Timings and locations can
+            Eidgah locations are submitted by visitors and shown as-is. Timings and locations can
             change year to year, so always verify locally before travelling.
           </p>
         </section>
@@ -85,7 +85,7 @@ export default async function AboutPage() {
           <dl className="grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-xl">
             <div>
               <dd className="font-serif text-3xl text-emerald-deep">{all.length}</dd>
-              <dt className="text-ink-muted text-sm mt-1">Entries</dt>
+              <dt className="text-ink-muted text-sm mt-1">Eidgahs</dt>
             </div>
             <div>
               <dd className="font-serif text-3xl text-plum">{cityCount}</dd>
@@ -112,8 +112,8 @@ export default async function AboutPage() {
       <footer className="border-t border-paper-line mt-16 bg-emerald-soft/30">
         <div className="container-narrow py-8 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between text-sm text-ink-muted">
           <div>
-            <span className="font-serif text-emerald-deep">Eidgah Times</span> — community
-            directory. Verify locally before travelling.
+            <span className="font-serif text-emerald-deep">Eidgah Times</span> — crowd-verified
+            prayer times. Confirm locally before travelling.
           </div>
           <div className="text-xs text-ink-subtle">
             Map tiles © OpenStreetMap contributors.

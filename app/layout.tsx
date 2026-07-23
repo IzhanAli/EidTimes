@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Eidgah Times — a community directory",
+  title: "Eidgah Times — crowd-verified prayer times",
   description:
-    "A community-maintained directory of Eid prayer locations, times, and notes.",
+    "Crowd-verified Eid prayer locations, times, and notes — searchable by city.",
 };
 
 export default function RootLayout({

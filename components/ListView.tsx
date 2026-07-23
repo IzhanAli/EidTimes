@@ -411,7 +411,7 @@ export default function ListView({
 
       {filtered.length === 0 ? (
         <div className="border border-dashed border-paper-line rounded-sm p-10 text-center text-ink-muted bg-paper-card">
-          No entries yet for this view. Add the first one.
+          Nothing's here Add the first one.
         </div>
       ) : sort === "city" ? (
         <div className="space-y-10">

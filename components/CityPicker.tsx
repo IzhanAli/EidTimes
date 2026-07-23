@@ -100,7 +100,7 @@ export default function CityPicker({ open, eidgahs, detectedCountry, onPick }: P
                     >
                       <div className="text-sm text-ink leading-tight">{city}</div>
                       <div className="text-[11px] text-ink-subtle mt-0.5">
-                        {count} {count === 1 ? "entry" : "entries"}
+                        {count} {count === 1 ? "eidgah" : "eidgahs"}
                       </div>
                     </button>
                   </li>
