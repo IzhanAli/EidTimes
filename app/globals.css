@@ -4,6 +4,21 @@
 
 @import "leaflet/dist/leaflet.css";
 
+@font-face {
+  font-family: "Calligraphy Brillian";
+  src: url("/fonts/calligraphy-brillian.otf") format("opentype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Canela Text Trial";
+  src: url("/fonts/CanelaText-Regular-Trial.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+
 /* ---------------------------------------------------------------------------
  * Occasion themes. RGB triplets so Tailwind alpha modifiers keep working
  * (tailwind.config.ts maps paper/emerald/saffron tokens onto these vars).
@@ -15,24 +30,24 @@
  * ------------------------------------------------------------------------- */
 :root,
 [data-occasion="eid_al_fitr"] {
-  --paper: 245 241 230;
-  --paper-card: 253 250 242;
+  --paper: 239 255 255;
+  --paper-card: 239 255 255;
   --paper-line: 227 220 200;
-  --accent: 15 81 50;
-  --accent-deep: 10 61 38;
-  --accent-soft: 214 230 218;
+  --accent: 44 114 133;
+  --accent-deep: 44 114 133;
+  --accent-soft: 214 232 236;
   --accent2: 184 134 43;
   --accent2-deep: 140 100 26;
   --accent2-soft: 240 228 191;
-  --hero-bg-1: #0b2e20;
-  --hero-bg-2: #14503a;
+  --hero-bg-1: #2c7285;
+  --hero-bg-2: #2c7285;
   --hero-gold: #e3b54d;
   --glow: #f3c969;
 }
 
 [data-occasion="eid_al_adha"] {
-  --paper: 249 240 227;
-  --paper-card: 255 250 241;
+  --paper: 239 255 255;
+  --paper-card: 239 255 255;
   --paper-line: 236 219 195;
   --accent: 148 56 27;
   --accent-deep: 107 36 14;
@@ -61,17 +76,6 @@
   }
   hr {
     border-color: rgb(var(--paper-line));
-  }
-  /* Subtle paper grain */
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    opacity: 0.04;
-    z-index: 0;
-    background-image: radial-gradient(rgba(0,0,0,0.6) 1px, transparent 1px);
-    background-size: 3px 3px;
   }
 }
 
@@ -262,28 +266,110 @@
   .hero-band {
     position: relative;
     overflow: hidden;
-    background: linear-gradient(140deg, var(--hero-bg-1) 0%, var(--hero-bg-2) 100%);
-    color: rgb(var(--paper));
+    min-height: 600px;
+    background: rgb(var(--paper));
+    color: #171514;
     transition: background 600ms ease;
   }
   .hero-band::before {
     content: "";
     position: absolute;
-    inset: -50%;
+    inset: 0;
     pointer-events: none;
-    opacity: 0.07;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cpath d='M28 6l3.1 7.2 7.2-2.8-2.8 7.2L42.7 21l-7.2 3.1 2.8 7.2-7.2-2.8L28 35.7l-3.1-7.2-7.2 2.8 2.8-7.2L13.3 21l7.2-3.1-2.8-7.2 7.2 2.8z' fill='%23ffffff'/%3E%3C/svg%3E");
-    background-size: 56px 56px;
-    animation: lattice-drift 60s linear infinite;
+    background: url("/hero-bg.svg") no-repeat left center / cover;
   }
+  .hero-band::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    right: 0;
+    bottom: 0;
+    width: clamp(300px, 34vw, 520px);
+    height: 100%;
+    pointer-events: none;
+    background: url("/dome.svg?v=2") no-repeat right bottom / auto 100%;
+  }
+  .hero-image-overlay {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(to top, #efffff 7%, rgb(239 255 255 / 0) 77%);
+  }
+  .hero-search-button {
+    position: absolute;
+    z-index: 20;
+    left: 50%;
+    bottom: 28px;
+    transform: translateX(-50%);
+    width: 122px;
+    height: 122px;
+    display: grid;
+    place-items: center;
+    border: 3px solid #2c7285;
+    border-radius: 9999px;
+    background: transparent;
+    color: #171514;
+    font-family: Georgia, serif;
+    font-size: 1.8rem;
+    font-style: italic;
+    cursor: pointer;
+    animation: search-float 2.6s ease-in-out infinite;
+  }
+  .hero-search-button:hover {
+    color: #2c7285;
+    animation-play-state: paused;
+    box-shadow: 0 0 0 8px rgb(44 114 133 / 0.12), 0 0 24px rgb(44 114 133 / 0.35);
+  }
+  .hero-band p { color: rgb(23 21 20 / 0.75); }
+  .hero-band .hero-subtitle { color: #000; }
+  .hero-band > .container-narrow { min-height: 600px; }
   .hero-title {
+    font-family: "Calligraphy Brillian", "Brush Script MT", cursive;
     font-size: clamp(2.2rem, 5vw, 3.4rem);
     line-height: 1.05;
     letter-spacing: -0.015em;
   }
   .hero-greeting {
+    font-family: Georgia, serif;
     color: var(--hero-gold);
     font-style: italic;
+  }
+
+  .hero-subtitle {
+    font-family: "Canela Text Trial", Georgia, serif;
+    color: var(--hero-black);
+    font-style: italic;
+  }
+}
+
+@media (max-width: 1023px) {
+  .hero-band,
+  .hero-band > .container-narrow { min-height: 520px; }
+  .hero-band::before {
+    background-position: left bottom;
+  }
+  .hero-band::after {
+    width: clamp(260px, 42vw, 420px);
+    height: 100%;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero-band,
+  .hero-band > .container-narrow { min-height: 460px; }
+  .hero-band::before {
+    background-position: calc(50% + 100px) bottom;
+  }
+  .hero-band::after {
+    width: min(68vw, 310px);
+    height: calc(100% - 50px);
+  }
+  .hero-search-button {
+    width: 96px;
+    height: 96px;
+    bottom: 20px;
+    font-size: 1.35rem;
   }
 }
 
@@ -322,6 +408,10 @@
   from { transform: translate(0, 0); }
   to   { transform: translate(56px, 56px); }
 }
+@keyframes search-float {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, -9px); }
+}
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -332,6 +422,7 @@
   .hero-band::before, .prox-soon .prox-dot, .card-enter {
     animation: none;
   }
+  .hero-search-button { animation: none; }
 }
 
 .leaflet-container {

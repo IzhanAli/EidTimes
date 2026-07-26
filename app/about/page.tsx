@@ -33,7 +33,7 @@ export default async function AboutPage() {
 
   return (
     <>
-      <header className="border-b border-paper-line bg-paper/80 backdrop-blur sticky top-0 z-30">
+      <header className="border-b border-paper-line bg-[#AAC3CA] sticky top-0 z-30">
         <div className="container-narrow py-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-6">
             <Link href="/" className="flex items-center gap-3">
