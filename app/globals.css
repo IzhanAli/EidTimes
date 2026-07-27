@@ -330,6 +330,9 @@
     line-height: 1.05;
     letter-spacing: -0.015em;
   }
+  .hero-title.hero-title-adha {
+    font-size: calc(clamp(2.2rem, 5vw, 3.4rem) - 4px);
+  }
   .hero-greeting {
     font-family: Georgia, serif;
     color: var(--hero-gold);
@@ -366,10 +369,7 @@
     height: calc(100% - 50px);
   }
   .hero-search-button {
-    width: 96px;
-    height: 96px;
-    bottom: 20px;
-    font-size: 1.35rem;
+    display: none;
   }
 }
 

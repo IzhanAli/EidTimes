@@ -34,7 +34,7 @@ const OCCASION_HERO: Record<
   },
   eid_al_adha: {
     eyebrow: "10 Dhul-Hijjah · The festival of sacrifice",
-    subtitle: "Your new text",
+    subtitle: "After the blessed days of Dhul Hijjah\ncomes a morning of sacrifice",
     line: "In the days of pilgrimage, the takbeer calls out from every ground. Find where your city prays — and when.",
   },
 };
@@ -247,7 +247,13 @@ export default function Home({
                     {o.value === "eid_al_adha" ? (
                       <img src="/sheep.png?v=2" alt="" className="h-5 w-5 object-contain" />
                     ) : (
-                      <img src="/thin-moon.png" alt="" className="h-5 w-5 object-contain" />
+                      <img
+                        src="/thin-moon.png"
+                        alt=""
+                        className={`h-5 w-5 object-contain ${
+                          occasion === "eid_al_adha" ? "brightness-0" : ""
+                        }`}
+                      />
                     )}
                   </span>
                   <span className="hidden md:inline">{o.label}</span>
@@ -286,9 +292,14 @@ export default function Home({
       <section className="hero-band" aria-label={`${occasionLabel(occasion)} — currently showing`}>
         <div className="hero-image-overlay" aria-hidden />
         <div className="container-narrow relative z-10 py-14 sm:py-14 flex items-center justify-between gap-10">
-          <div key={occasion} className="animate-fade-up w-[calc(50%+50px)] min-w-0 sm:w-full max-w-3xl">
+          <div
+            key={occasion}
+            className={`animate-fade-up w-4/5 min-w-0 sm:w-full ${
+              occasion === "eid_al_adha" ? "max-w-4xl" : "max-w-3xl"
+            }`}
+          >
           
-            <h1 className="hero-title mt-3">
+            <h1 className={`hero-title mt-3 ${occasion === "eid_al_adha" ? "hero-title-adha" : ""}`}>
               {occasionLabel(occasion)}{" "}
             </h1>
 
