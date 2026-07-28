@@ -11,9 +11,7 @@ import ListView from "./ListView";
 import AddEidgahDrawer from "./AddEidgahDrawer";
 import CityPicker from "./CityPicker";
 import {
-  AdhaScene,
   CrescentGlyph,
-  FitrScene,
   KaabaGlyph,
   MosqueSkyline,
   StarDivider,
@@ -27,14 +25,16 @@ const OCCASION_ICON: Record<Occasion, typeof CrescentGlyph> = {
 // Editorial copy for the hero band, per occasion.
 const OCCASION_HERO: Record<
   Occasion,
-  { eyebrow: string; line: string }
+  { eyebrow: string; subtitle: string; line: string  }
 > = {
   eid_al_fitr: {
-    eyebrow: "1 Shawwal · The festival of breaking the fast",
+    eyebrow: "1 Shawwal · The festival of breaking the fast", 
+    subtitle: "After a Month of Fasting\nComes a Morning of Togetherness",
     line: "After a month of fasting, the community gathers at first light. Find where your city prays — and when.",
   },
   eid_al_adha: {
     eyebrow: "10 Dhul-Hijjah · The festival of sacrifice",
+    subtitle: "After the blessed days of Dhul Hijjah\ncomes a morning of sacrifice",
     line: "In the days of pilgrimage, the takbeer calls out from every ground. Find where your city prays — and when.",
   },
 };
@@ -200,7 +200,7 @@ export default function Home({
 
   return (
     <>
-      <header className="border-b border-paper-line bg-paper/80 backdrop-blur sticky top-0 z-30">
+      <header className="border-b border-paper-line bg-[#AAC3CA] sticky top-0 z-30">
         <div className="container-narrow py-3 sm:py-4 flex items-center justify-between gap-2 sm:gap-4">
           <div className="flex items-center gap-3 sm:gap-6 min-w-0">
             <Link href="/" className="flex items-center gap-2.5 sm:gap-3 min-w-0">
@@ -215,11 +215,8 @@ export default function Home({
                 <div className="eyebrow hidden sm:block">Salat-ul-Eidain</div>
               </div>
             </Link>
-            <nav className="hidden sm:flex items-center gap-4 text-sm">
-              <Link href="/" className="text-ink font-medium border-b-2 border-emerald pb-0.5">
-                Directory
-              </Link>
-              <Link href="/about" className="text-ink-muted hover:text-ink transition">
+            <nav className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm">
+              <Link href="/about" className="hidden lg:inline text-ink-muted hover:text-ink transition">
                 About
               </Link>
             </nav>
@@ -231,7 +228,6 @@ export default function Home({
             className="inline-flex border border-paper-line rounded-sm overflow-hidden bg-paper-card h-9 shrink-0"
           >
             {OCCASIONS.map((o, i) => {
-              const Icon = OCCASION_ICON[o.value];
               const active = occasion === o.value;
               return (
                 <button
@@ -248,7 +244,17 @@ export default function Home({
                     key={`${o.value}-${active}`}
                     className={`inline-flex ${active ? "animate-pop" : ""}`}
                   >
-                    <Icon className="h-4 w-4" />
+                    {o.value === "eid_al_adha" ? (
+                      <img src="/sheep.png?v=2" alt="" className="h-5 w-5 object-contain" />
+                    ) : (
+                      <img
+                        src="/thin-moon.png"
+                        alt=""
+                        className={`h-5 w-5 object-contain ${
+                          occasion === "eid_al_adha" ? "brightness-0" : ""
+                        }`}
+                      />
+                    )}
                   </span>
                   <span className="hidden md:inline">{o.label}</span>
                 </button>
@@ -284,43 +290,39 @@ export default function Home({
       {/* Occasion hero — deep themed band with the animated scene for the
           active Eid. Keyed by occasion so switching replays the entrance. */}
       <section className="hero-band" aria-label={`${occasionLabel(occasion)} — currently showing`}>
-        {/* on small screens the scene becomes a faint backdrop instead */}
-        <div
-          aria-hidden
-          className="absolute inset-y-0 -right-8 w-64 md:hidden opacity-25 pointer-events-none flex items-center"
-        >
-          {occasion === "eid_al_fitr" ? (
-            <FitrScene className="w-full h-auto" />
-          ) : (
-            <AdhaScene className="w-full h-auto" />
-          )}
-        </div>
-        <div className="container-narrow relative z-10 py-8 sm:py-14 flex items-center justify-between gap-10">
-          <div key={occasion} className="animate-fade-up max-w-xl">
-            <div
-              className="text-[0.68rem] uppercase tracking-[0.22em] font-semibold"
-              style={{ color: "var(--hero-gold)" }}
-            >
-              {OCCASION_HERO[occasion].eyebrow}
-            </div>
-            <h1 className="font-serif hero-title mt-3">
+        <div className="hero-image-overlay" aria-hidden />
+        <div className="container-narrow relative z-10 py-14 sm:py-14 flex items-center justify-between gap-10">
+          <div
+            key={occasion}
+            className={`animate-fade-up w-4/5 min-w-0 sm:w-full ${
+              occasion === "eid_al_adha" ? "max-w-4xl" : "max-w-3xl"
+            }`}
+          >
+          
+            <h1 className={`hero-title mt-3 ${occasion === "eid_al_adha" ? "hero-title-adha" : ""}`}>
               {occasionLabel(occasion)}{" "}
-              <span className="hero-greeting block sm:inline text-[0.55em] sm:ml-1">
-                Eid Mubarak
-              </span>
             </h1>
-            <p className="mt-4 text-sm sm:text-base text-paper/75 leading-relaxed max-w-md">
+
+            <p className="hero-subtitle mt-6 text-2xl sm:text-4xl text-black leading-snug max-w-3xl font-regular-italic drop-shadow-[2px_3px_3px_rgba(0,0,0,0.35)]">
+              {OCCASION_HERO[occasion].subtitle.split("\n").map((text) => (
+                <span className="block" key={text}>{text}</span>
+              ))}
+            </p>
+
+            <p className="mt-4 text-sm sm:text-base leading-relaxed max-w-md ">
               {OCCASION_HERO[occasion].line}
             </p>
-          </div>
-          <div key={`${occasion}-art`} className="hidden md:block animate-fade-up shrink-0">
-            {occasion === "eid_al_fitr" ? (
-              <FitrScene className="w-[320px] lg:w-[380px] h-auto" />
-            ) : (
-              <AdhaScene className="w-[320px] lg:w-[380px] h-auto" />
-            )}
+
           </div>
         </div>
+        <button
+          type="button"
+          className="hero-search-button"
+          onClick={() => document.querySelector("main")?.scrollIntoView({ behavior: "smooth" })}
+          aria-label="Search Eid prayer locations"
+        >
+          Search
+        </button>
       </section>
 
       <main className="container-narrow py-10">
