@@ -3,7 +3,7 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Plus, MapPin } from "@phosphor-icons/react";
+import { List as MenuIcon, MapPin, PencilSimple, Plus, X } from "@phosphor-icons/react";
 import type { Eidgah, GeoStatus, LatLng, Occasion } from "@/lib/types";
 import { OCCASIONS, hasOccasion, occasionLabel } from "@/lib/types";
 import { countryName } from "@/lib/countries";
@@ -11,16 +11,9 @@ import ListView from "./ListView";
 import AddEidgahDrawer from "./AddEidgahDrawer";
 import CityPicker from "./CityPicker";
 import {
-  CrescentGlyph,
-  KaabaGlyph,
   MosqueSkyline,
   StarDivider,
 } from "./decor/EidMotifs";
-
-const OCCASION_ICON: Record<Occasion, typeof CrescentGlyph> = {
-  eid_al_fitr: CrescentGlyph,
-  eid_al_adha: KaabaGlyph,
-};
 
 // Editorial copy for the hero band, per occasion.
 const OCCASION_HERO: Record<
@@ -70,6 +63,7 @@ export default function Home({
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [editing, setEditing] = useState<Eidgah | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [filter, setFilter] = useState<Filter | null>(null);
   const [clientCountry, setClientCountry] = useState<string | null>(detectedCountry);
   const [userLoc, setUserLoc] = useState<LatLng | null>(null);
@@ -201,18 +195,12 @@ export default function Home({
   return (
     <>
       <header className="border-b border-paper-line bg-[#AAC3CA] sticky top-0 z-30">
-        <div className="container-narrow py-3 sm:py-4 flex items-center justify-between gap-2 sm:gap-4">
+        <div className="container-narrow navbar-shell py-3 sm:py-4 flex items-center justify-between gap-2 sm:gap-4">
           <div className="flex items-center gap-3 sm:gap-6 min-w-0">
             <Link href="/" className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-              <div className="h-9 w-9 grid place-items-center bg-emerald text-paper rounded-sm shadow-sm transition-colors">
-                {(() => {
-                  const LogoIcon = OCCASION_ICON[occasion];
-                  return <LogoIcon key={occasion} className="h-5 w-5 animate-pop" />;
-                })()}
-              </div>
               <div className="leading-tight">
                 <div className="font-serif text-lg text-ink whitespace-nowrap">Eidgah Times</div>
-                <div className="eyebrow hidden sm:block">Salat-ul-Eidain</div>
+                <div className="eyebrow brand-tagline hidden sm:block">Salat-ul-Eidain</div>
               </div>
             </Link>
             <nav className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm">
@@ -225,7 +213,7 @@ export default function Home({
           <div
             role="tablist"
             aria-label="Occasion"
-            className="inline-flex border border-paper-line rounded-sm overflow-hidden bg-paper-card h-9 shrink-0"
+            className="navbar-occasion-toggle inline-flex border border-paper-line rounded-sm overflow-hidden bg-paper-card h-9 shrink-0"
           >
             {OCCASIONS.map((o, i) => {
               const active = occasion === o.value;
@@ -269,11 +257,12 @@ export default function Home({
                 className="hidden sm:inline-flex items-center gap-2 bg-paper-card border border-paper-line px-3 h-9 rounded-sm text-sm hover:border-emerald transition"
                 title="Change city"
               >
+                <MapPin size={18} weight="regular" className="text-ink shrink-0" />
                 <span className="text-ink-subtle text-xs uppercase tracking-widest">
                   {countryName(filter.country)}
                 </span>
                 <span className="text-ink font-medium">{filter.city}</span>
-                <span className="text-emerald">Change</span>
+                <PencilSimple size={16} weight="regular" className="text-ink shrink-0" />
               </button>
             )}
             <button
@@ -281,10 +270,37 @@ export default function Home({
               onClick={openAdd}
             >
               <Plus size={16} weight="bold" className="btn-add-icon" />
-              Add<span className="hidden sm:inline">&nbsp;venue</span>
+              Add Venue<span className="hidden sm:inline">&nbsp;</span>
+            </button>
+            <button
+              type="button"
+              className="sm:hidden h-9 w-9 grid place-items-center rounded-sm border border-ink/20 text-ink"
+              onClick={() => setMobileMenuOpen((open) => !open)}
+              aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={mobileMenuOpen}
+            >
+              {mobileMenuOpen ? <X size={21} /> : <MenuIcon size={22} />}
             </button>
           </div>
         </div>
+        {mobileMenuOpen && (
+          <div className="sm:hidden absolute top-full right-3 mt-2 w-40 rounded-md border border-paper-line bg-paper-card p-2 shadow-xl">
+            <Link
+              href="/"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block rounded-sm px-3 py-2 text-sm font-medium text-ink hover:bg-emerald-soft/60"
+            >
+              Directory
+            </Link>
+            <Link
+              href="/about"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block rounded-sm px-3 py-2 text-sm font-medium text-ink hover:bg-emerald-soft/60"
+            >
+              About
+            </Link>
+          </div>
+        )}
       </header>
 
       {/* Occasion hero — deep themed band with the animated scene for the
@@ -321,7 +337,12 @@ export default function Home({
           onClick={() => document.querySelector("main")?.scrollIntoView({ behavior: "smooth" })}
           aria-label="Search Eid prayer locations"
         >
-          Search
+          <span className="hero-search-icon" aria-hidden>
+            <img src="/loupe.png" alt="" className="h-14 w-14 object-contain" />
+          </span>
+          <span className="hero-search-hint" text-light text-sm>
+            Click here
+          </span>
         </button>
       </section>
 

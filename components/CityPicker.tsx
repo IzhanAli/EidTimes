@@ -180,6 +180,7 @@ export default function CityPicker({ open, eidgahs, detectedCountry, onPick }: P
           <p className="text-xs text-ink-subtle text-right">
             You can change this later from the header.
           </p>
+
         </div>
       </div>
     </div>
