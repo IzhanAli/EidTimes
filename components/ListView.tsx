@@ -336,7 +336,7 @@ export default function ListView({
               title="List view"
             >
               <ListBullets size={16} weight={layout === "list" ? "fill" : "regular"} />
-              List
+              <span className="hidden sm:inline">List</span>
             </button>
             <button
               role="tab"
@@ -348,7 +348,7 @@ export default function ListView({
               title="Grid view"
             >
               <GridFour size={16} weight={layout === "grid" ? "fill" : "regular"} />
-              Grid
+              <span className="hidden sm:inline">Grid</span>
             </button>
           </div>
         </div>

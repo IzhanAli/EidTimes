@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { listEidgahs } from "@/lib/db";
 import type { Eidgah } from "@/lib/types";
+import AboutMobileMenu from "@/components/AboutMobileMenu";
 
 export const dynamic = "force-dynamic";
 
@@ -34,29 +35,24 @@ export default async function AboutPage() {
   return (
     <>
       <header className="border-b border-paper-line bg-[#AAC3CA] sticky top-0 z-30">
-        <div className="container-narrow py-4 flex items-center justify-between gap-4">
+        <div className="container-narrow navbar-shell py-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-6">
             <Link href="/" className="flex items-center gap-3">
-              <div className="h-9 w-9 grid place-items-center bg-emerald text-paper rounded-sm font-serif text-lg shadow-sm">
-                E
-              </div>
               <div className="leading-tight">
                 <div className="font-serif text-lg text-ink">Eidgah Times</div>
-                <div className="eyebrow">Salat-ul-Eidain</div>
+                <div className="eyebrow brand-tagline">Salat-ul-Eidain</div>
               </div>
             </Link>
             <nav className="hidden sm:flex items-center gap-4 text-sm">
-              <Link href="/" className="text-ink-muted hover:text-ink transition">
-                Directory
-              </Link>
               <Link href="/about" className="text-ink font-medium border-b-2 border-emerald pb-0.5">
                 About
               </Link>
             </nav>
           </div>
-          <Link href="/" className="btn btn-primary">
+          <Link href="/" className="btn btn-primary hidden sm:inline-flex">
             Browse directory
           </Link>
+          <AboutMobileMenu />
         </div>
       </header>
 
