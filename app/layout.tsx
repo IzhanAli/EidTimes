@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import PwaRegister from "@/components/PwaRegister";
 
 export const metadata: Metadata = {
   title: "Eidgah Times — crowd-verified prayer times",
@@ -23,6 +24,7 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans relative">
+        <PwaRegister />
         <div className="relative z-10">{children}</div>
       </body>
     </html>
