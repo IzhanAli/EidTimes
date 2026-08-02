@@ -35,6 +35,13 @@ export default function AboutMobileMenu() {
           >
             About
           </Link>
+          <Link
+            href="/guide"
+            onClick={() => setOpen(false)}
+            className="block rounded-sm px-3 py-2 text-sm font-medium text-ink hover:bg-emerald-soft/60"
+          >
+            Eid Guide
+          </Link>
         </div>
       )}
     </div>

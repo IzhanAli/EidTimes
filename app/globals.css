@@ -395,6 +395,11 @@
 }
 
 @media (max-width: 767px) {
+  .navbar-mobile-button {
+    height: 2rem;
+    padding-inline: 0.65rem;
+    font-size: 0.75rem;
+  }
   .hero-band,
   .hero-band > .container-narrow { min-height: 460px; }
   .hero-band::before {
@@ -407,6 +412,91 @@
   .hero-search-button {
     display: none;
   }
+}
+
+.fitr-journey {
+  --journey-left: 3rem;
+  position: relative;
+  max-width: 58rem;
+}
+
+.fitr-journey-track {
+  position: absolute;
+  top: 3rem;
+  bottom: 3rem;
+  left: var(--journey-left);
+  width: 2px;
+  overflow: visible;
+  background: rgb(var(--paper-line));
+  transform: translateX(-50%);
+}
+
+.fitr-journey-progress {
+  position: absolute;
+  inset: 0;
+  transform-origin: top;
+  background: linear-gradient(to bottom, #78c5d2, #2c7285 75%, #f0c86e);
+  box-shadow: 0 0 8px rgb(44 114 133 / 0.8), 0 0 20px rgb(44 114 133 / 0.5);
+  transition: transform 160ms linear;
+}
+
+.fitr-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: 2rem;
+  min-height: 10rem;
+}
+
+.fitr-step-visual {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  align-self: start;
+  width: 6rem;
+  height: 6rem;
+  border: 2px solid rgb(var(--accent));
+  border-radius: 9999px;
+  background: radial-gradient(circle at 35% 30%, #ffffff, #e6f6f8 68%, #b8dbe1);
+  box-shadow: 0 10px 30px rgb(44 114 133 / 0.17), 0 0 0 7px rgb(239 255 255 / 0.92);
+}
+
+.fitr-step-visual span {
+  font-size: 2.35rem;
+  filter: drop-shadow(0 3px 4px rgb(23 21 20 / 0.16));
+}
+
+.fitr-step-content {
+  padding: 1.5rem 1.65rem;
+  border: 1px solid rgb(var(--paper-line));
+  border-radius: 0.8rem;
+  background: rgb(var(--paper-card) / 0.92);
+  box-shadow: 0 14px 34px -26px rgb(23 21 20 / 0.48);
+  backdrop-filter: blur(5px);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.fitr-step-content:hover {
+  transform: translateY(-2px);
+  border-color: rgb(var(--accent) / 0.45);
+  box-shadow: 0 18px 38px -24px rgb(44 114 133 / 0.42);
+}
+
+@media (max-width: 639px) {
+  .fitr-journey { --journey-left: 2rem; }
+  .fitr-journey-track { top: 2rem; bottom: 2rem; }
+  .fitr-step {
+    grid-template-columns: 4rem minmax(0, 1fr);
+    gap: 1.1rem;
+  }
+  .fitr-step-visual {
+    width: 4rem;
+    height: 4rem;
+    box-shadow: 0 8px 22px rgb(44 114 133 / 0.16), 0 0 0 5px rgb(239 255 255 / 0.92);
+  }
+  .fitr-step-visual span { font-size: 1.75rem; }
+  .fitr-step-content { padding: 1.15rem; }
 }
 
 /* --------------------------- motif animations ---------------------------- */
