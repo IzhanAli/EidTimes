@@ -197,9 +197,14 @@ export default function Home({
       <header className="border-b border-paper-line bg-[#AAC3CA] sticky top-0 z-30">
         <div className="container-narrow navbar-shell py-3 sm:py-4 flex items-center justify-between gap-2 sm:gap-4">
           <div className="flex items-center gap-3 sm:gap-6 min-w-0">
-            <Link href="/" className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+            <Link href="/" className="flex items-center gap-1 sm:gap-2 min-w-0">
+              <img
+                src="/eidtimes.svg"
+                alt="Eidgah Times logo"
+                className="h-8 w-8 shrink-0 rounded-lg object-cover mix-blend-multiply sm:h-10 sm:w-10"
+              />
               <div className="leading-tight">
-                <div className="font-serif text-lg text-ink whitespace-nowrap">Eidgah Times</div>
+                <div className="font-serif text-[15px] text-ink whitespace-nowrap sm:text-lg">Eidgah Times</div>
                 <div className="eyebrow brand-tagline hidden sm:block">Salat-ul-Eidain</div>
               </div>
             </Link>
@@ -207,13 +212,16 @@ export default function Home({
               <Link href="/about" className="hidden lg:inline text-ink-muted hover:text-ink transition">
                 About
               </Link>
+              <Link href="/guide" className="hidden lg:inline text-ink-muted hover:text-ink transition">
+                Eid Guide
+              </Link>
             </nav>
           </div>
 
           <div
             role="tablist"
             aria-label="Occasion"
-            className="navbar-occasion-toggle inline-flex border border-paper-line rounded-sm overflow-hidden bg-paper-card h-9 shrink-0"
+            className="navbar-occasion-toggle inline-flex border border-paper-line rounded-sm overflow-hidden bg-paper-card h-8 sm:h-9 shrink-0"
           >
             {OCCASIONS.map((o, i) => {
               const active = occasion === o.value;
@@ -224,7 +232,7 @@ export default function Home({
                   aria-selected={active}
                   onClick={() => setOccasion(o.value)}
                   title={`Show ${o.label} eidgahs`}
-                  className={`px-3 inline-flex items-center gap-1.5 text-sm transition ${
+                  className={`px-2 sm:px-3 inline-flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm transition ${
                     i > 0 ? "border-l border-paper-line" : ""
                   } ${active ? "bg-emerald text-paper" : "text-ink hover:bg-emerald-soft"}`}
                 >
@@ -233,12 +241,12 @@ export default function Home({
                     className={`inline-flex ${active ? "animate-pop" : ""}`}
                   >
                     {o.value === "eid_al_adha" ? (
-                      <img src="/sheep.png?v=2" alt="" className="h-5 w-5 object-contain" />
+                      <img src="/sheep.png?v=2" alt="" className="h-4 w-4 object-contain sm:h-5 sm:w-5" />
                     ) : (
                       <img
                         src="/thin-moon.png"
                         alt=""
-                        className={`h-5 w-5 object-contain ${
+                        className={`h-4 w-4 object-contain sm:h-5 sm:w-5 ${
                           occasion === "eid_al_adha" ? "brightness-0" : ""
                         }`}
                       />
@@ -266,7 +274,7 @@ export default function Home({
               </button>
             )}
             <button
-              className="btn btn-add inline-flex items-center gap-1.5 whitespace-nowrap shrink-0"
+              className="btn btn-add hidden sm:inline-flex items-center gap-1.5 whitespace-nowrap shrink-0"
               onClick={openAdd}
             >
               <Plus size={16} weight="bold" className="btn-add-icon" />
@@ -274,7 +282,7 @@ export default function Home({
             </button>
             <button
               type="button"
-              className="sm:hidden h-9 w-9 grid place-items-center rounded-sm border border-ink/20 text-ink"
+              className="sm:hidden h-8 w-8 grid place-items-center rounded-sm border border-ink/20 text-ink"
               onClick={() => setMobileMenuOpen((open) => !open)}
               aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={mobileMenuOpen}
@@ -299,9 +307,37 @@ export default function Home({
             >
               About
             </Link>
+            <Link
+              href="/guide"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block rounded-sm px-3 py-2 text-sm font-medium text-ink hover:bg-emerald-soft/60"
+            >
+              Eid Guide
+            </Link>
           </div>
         )}
       </header>
+
+      <div className="sm:hidden flex items-center gap-2 bg-[#EFFFFF] px-3 py-2">
+        {filter && (
+          <button
+            onClick={() => setPickerOpen(true)}
+            className="inline-flex h-8 min-w-0 flex-1 items-center gap-1.5 rounded-sm border border-paper-line bg-paper-card px-2 text-xs hover:border-emerald transition"
+            title="Change location"
+          >
+            <MapPin size={15} weight="regular" className="shrink-0 text-ink" />
+            <span className="truncate font-medium text-ink">{filter.city}</span>
+            <PencilSimple size={14} weight="regular" className="ml-auto shrink-0 text-ink" />
+          </button>
+        )}
+        <button
+          className="btn btn-add navbar-mobile-button inline-flex shrink-0 items-center gap-1 whitespace-nowrap"
+          onClick={openAdd}
+        >
+          <Plus size={14} weight="bold" className="btn-add-icon" />
+          Add Venue
+        </button>
+      </div>
 
       {/* Occasion hero — deep themed band with the animated scene for the
           active Eid. Keyed by occasion so switching replays the entrance. */}
@@ -314,7 +350,6 @@ export default function Home({
               occasion === "eid_al_adha" ? "max-w-4xl" : "max-w-3xl"
             }`}
           >
-          
             <h1 className={`hero-title mt-3 ${occasion === "eid_al_adha" ? "hero-title-adha" : ""}`}>
               {occasionLabel(occasion)}{" "}
             </h1>
@@ -349,23 +384,6 @@ export default function Home({
       <main className="container-narrow py-10">
         {/* Mobile-only city control — the header chip is hidden below sm, so
             without this there'd be no way to change city on a phone. */}
-        {filter && (
-          <button
-            onClick={() => setPickerOpen(true)}
-            className="sm:hidden w-full flex items-center justify-between gap-2 bg-paper-card border border-paper-line px-3 h-11 rounded-sm text-sm mb-5 hover:border-emerald transition"
-            title="Change city"
-          >
-            <span className="flex items-center gap-2 min-w-0">
-              <MapPin size={16} weight="fill" className="text-emerald shrink-0" />
-              <span className="text-ink-subtle text-xs uppercase tracking-widest shrink-0">
-                {countryName(filter.country)}
-              </span>
-              <span className="text-ink font-medium truncate">{filter.city}</span>
-            </span>
-            <span className="text-emerald shrink-0">Change</span>
-          </button>
-        )}
-
         <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
           <div
             role="tablist"
