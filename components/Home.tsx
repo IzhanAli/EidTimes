@@ -314,7 +314,7 @@ export default function Home({
               occasion === "eid_al_adha" ? "max-w-4xl" : "max-w-3xl"
             }`}
           >
-          
+
             <h1 className={`hero-title mt-3 ${occasion === "eid_al_adha" ? "hero-title-adha" : ""}`}>
               {occasionLabel(occasion)}{" "}
             </h1>
