@@ -10,10 +10,7 @@ import { countryName } from "@/lib/countries";
 import ListView from "./ListView";
 import AddEidgahDrawer from "./AddEidgahDrawer";
 import CityPicker from "./CityPicker";
-import {
-  MosqueSkyline,
-  StarDivider,
-} from "./decor/EidMotifs";
+import SiteFooter from "./SiteFooter";
 
 // Editorial copy for the hero band, per occasion.
 const OCCASION_HERO: Record<
@@ -436,24 +433,7 @@ export default function Home({
         )}
       </main>
 
-      <div className="mt-16">
-        {/* skyline bleeds into the footer block below it */}
-        <MosqueSkyline className="block w-full h-auto text-emerald-deep translate-y-px transition-colors" />
-        <footer className="bg-emerald-deep text-paper/80 transition-colors">
-          <div className="container-narrow py-10">
-            <StarDivider className="text-paper/70 mb-8" />
-            <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between text-sm">
-              <div>
-                <span className="font-serif text-paper">Eidgah Times</span> — crowd-verified
-                prayer times. Confirm locally before travelling.
-              </div>
-              <div className="text-xs text-paper/55">
-                Map tiles © OpenStreetMap contributors.
-              </div>
-            </div>
-          </div>
-        </footer>
-      </div>
+      <SiteFooter />
 
       <AddEidgahDrawer
         open={drawerOpen}
