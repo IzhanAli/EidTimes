@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { CheckCircle, Clock, List as MenuIcon, X } from "@phosphor-icons/react";
+import { CheckCircle, Clock } from "@phosphor-icons/react";
 import { useEffect, useRef, useState } from "react";
 import type { Occasion } from "@/lib/types";
 import { OCCASIONS } from "@/lib/types";
+import MobileNavigation from "./MobileNavigation";
+import SiteFooter from "./SiteFooter";
 
 const GUIDES: Record<Occasion, {
   title: string;
@@ -107,7 +109,6 @@ const FITR_STEPS = [
 
 export default function EidGuide({ initialOccasion }: { initialOccasion: Occasion }) {
   const [occasion, setOccasion] = useState<Occasion>(initialOccasion);
-  const [menuOpen, setMenuOpen] = useState(false);
   const journeyRef = useRef<HTMLDivElement>(null);
   const [journeyProgress, setJourneyProgress] = useState(0);
   const guide = GUIDES[occasion];
@@ -179,18 +180,7 @@ export default function EidGuide({ initialOccasion }: { initialOccasion: Occasio
             <Link href="/guide" className="text-ink font-medium border-b-2 border-emerald pb-0.5">Eid Guide</Link>
           </nav>
 
-          <div className="relative sm:hidden">
-            <button type="button" onClick={() => setMenuOpen((open) => !open)} className="h-9 w-9 grid place-items-center rounded-sm border border-ink/20" aria-label="Toggle navigation">
-              {menuOpen ? <X size={21} /> : <MenuIcon size={22} />}
-            </button>
-            {menuOpen && (
-              <div className="absolute right-0 top-full mt-2 w-40 rounded-md border border-paper-line bg-paper-card p-2 shadow-xl">
-                <Link href="/" className="block px-3 py-2 text-sm text-ink">Directory</Link>
-                <Link href="/about" className="block px-3 py-2 text-sm text-ink">About</Link>
-                <Link href="/guide" className="block px-3 py-2 text-sm font-medium text-ink">Eid Guide</Link>
-              </div>
-            )}
-          </div>
+          <MobileNavigation />
         </div>
       </header>
 
@@ -270,6 +260,7 @@ export default function EidGuide({ initialOccasion }: { initialOccasion: Occasio
         )}
 
       </main>
+      <SiteFooter />
     </>
   );
 }

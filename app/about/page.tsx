@@ -66,6 +66,11 @@ export default async function AboutPage() {
       </header>
 
       <main className="container-narrow py-12">
+        <Link href="/" className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-emerald hover:underline">
+          <span aria-hidden>←</span>
+          Back
+        </Link>
+
         <section className="max-w-prose">
           <div className="eyebrow mb-3">Vol. I · Open contributions</div>
           <h1 className="font-serif text-4xl md:text-5xl tracking-tightish leading-[1.05] text-ink">
@@ -85,33 +90,40 @@ export default async function AboutPage() {
           </p>
         </section>
 
-        <section className="mt-10 pt-8 border-t border-paper-line">
-          <div className="eyebrow mb-4">At a glance</div>
-          <dl className="grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-xl">
+        <section className="mt-10 pt-8" aria-labelledby="about-stats-title">
+          <div className="mb-5 flex items-end justify-between gap-4">
             <div>
-              <dd className="font-serif text-3xl text-emerald-deep">{all.length}</dd>
-              <dt className="text-ink-muted text-sm mt-1">Eidgahs</dt>
+              <div className="eyebrow">Community directory</div>
+              <h2 id="about-stats-title" className="mt-1 font-serif text-2xl text-ink">
+                At a glance
+              </h2>
             </div>
-            <div>
-              <dd className="font-serif text-3xl text-plum">{cityCount}</dd>
-              <dt className="text-ink-muted text-sm mt-1">Cities</dt>
-            </div>
-            <div>
-              <dd className="font-serif text-3xl text-saffron-deep">{countryCount}</dd>
-              <dt className="text-ink-muted text-sm mt-1">Countries</dt>
-            </div>
-            <div>
-              <dd className="font-serif text-xl text-ink pt-2">{lastAddedLabel}</dd>
-              <dt className="text-ink-muted text-sm mt-1">Last added</dt>
-            </div>
+            <span className="hidden sm:block text-xs text-ink-muted">Updated as the community grows</span>
+          </div>
+
+          <dl className="grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+            {[
+              { value: all.length, label: "Eidgahs", detail: "Prayer places", accent: "bg-emerald", valueClass: "text-emerald-deep" },
+              { value: cityCount, label: "Cities", detail: "Across the directory", accent: "bg-plum", valueClass: "text-plum" },
+              { value: countryCount, label: "Countries", detail: "Community coverage", accent: "bg-saffron", valueClass: "text-saffron-deep" },
+              { value: lastAddedLabel, label: "Last added", detail: "Latest contribution", accent: "bg-[#2C7285]", valueClass: "text-ink" },
+            ].map((stat) => (
+              <div
+                key={stat.label}
+                className="group relative min-h-36 overflow-hidden rounded-xl border border-paper-line bg-white/55 p-4 shadow-[0_10px_30px_rgba(44,114,133,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(44,114,133,0.14)] sm:p-5"
+              >
+                <span className={`absolute inset-x-0 top-0 h-1 ${stat.accent}`} aria-hidden />
+                <span className={`mb-5 block h-2.5 w-2.5 rounded-full ${stat.accent} ring-4 ring-white/80`} aria-hidden />
+                <dd className={`font-serif leading-none ${stat.valueClass} ${stat.label === "Last added" ? "text-xl" : "text-4xl"}`}>
+                  {stat.value}
+                </dd>
+                <dt className="mt-2 text-sm font-semibold text-ink">{stat.label}</dt>
+                <p className="mt-1 text-[11px] leading-snug text-ink-muted">{stat.detail}</p>
+              </div>
+            ))}
           </dl>
         </section>
 
-        <div className="mt-12">
-          <Link href="/" className="text-emerald hover:underline">
-            ← Back to the directory
-          </Link>
-        </div>
       </main>
 
       <SiteFooter />

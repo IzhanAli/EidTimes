@@ -292,6 +292,12 @@
     pointer-events: none;
     background: url("/dome.svg?v=2") no-repeat right bottom / auto 100%;
   }
+
+  .hero-band-adha::after {
+    background-image: url("/eid-adha-sheep.png");
+    background-position: right bottom;
+    background-size: contain;
+  }
   .hero-image-overlay {
     position: absolute;
     z-index: 2;
@@ -408,6 +414,9 @@
   .hero-band::after {
     width: min(68vw, 310px);
     height: calc(100% - 50px);
+  }
+  .hero-band-adha::after {
+    right: -70px;
   }
   .hero-search-button {
     display: none;
