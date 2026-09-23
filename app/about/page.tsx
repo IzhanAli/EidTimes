@@ -2,6 +2,7 @@ import Link from "next/link";
 import { listEidgahs } from "@/lib/db";
 import type { Eidgah } from "@/lib/types";
 import AboutMobileMenu from "@/components/AboutMobileMenu";
+import SiteFooter from "@/components/SiteFooter";
 
 export const dynamic = "force-dynamic";
 
@@ -113,17 +114,7 @@ export default async function AboutPage() {
         </div>
       </main>
 
-      <footer className="border-t border-paper-line mt-16 bg-emerald-soft/30">
-        <div className="container-narrow py-8 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between text-sm text-ink-muted">
-          <div>
-            <span className="font-serif text-emerald-deep">Eidgah Times</span> — crowd-verified
-            prayer times. Confirm locally before travelling.
-          </div>
-          <div className="text-xs text-ink-subtle">
-            Map tiles © OpenStreetMap contributors.
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </>
   );
 }
