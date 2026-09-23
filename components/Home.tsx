@@ -3,7 +3,7 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { List as MenuIcon, MapPin, PencilSimple, Plus, X } from "@phosphor-icons/react";
+import { MapPin, PencilSimple, Plus } from "@phosphor-icons/react";
 import type { Eidgah, GeoStatus, LatLng, Occasion } from "@/lib/types";
 import { OCCASIONS, hasOccasion, occasionLabel } from "@/lib/types";
 import { countryName } from "@/lib/countries";
@@ -11,6 +11,7 @@ import ListView from "./ListView";
 import AddEidgahDrawer from "./AddEidgahDrawer";
 import CityPicker from "./CityPicker";
 import SiteFooter from "./SiteFooter";
+import MobileNavigation from "./MobileNavigation";
 
 // Editorial copy for the hero band, per occasion.
 const OCCASION_HERO: Record<
@@ -60,7 +61,6 @@ export default function Home({
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [editing, setEditing] = useState<Eidgah | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [filter, setFilter] = useState<Filter | null>(null);
   const [clientCountry, setClientCountry] = useState<string | null>(detectedCountry);
   const [userLoc, setUserLoc] = useState<LatLng | null>(null);
@@ -277,42 +277,9 @@ export default function Home({
               <Plus size={16} weight="bold" className="btn-add-icon" />
               Add Venue<span className="hidden sm:inline">&nbsp;</span>
             </button>
-            <button
-              type="button"
-              className="sm:hidden h-8 w-8 grid place-items-center rounded-sm border border-ink/20 text-ink"
-              onClick={() => setMobileMenuOpen((open) => !open)}
-              aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
-              aria-expanded={mobileMenuOpen}
-            >
-              {mobileMenuOpen ? <X size={21} /> : <MenuIcon size={22} />}
-            </button>
+            <MobileNavigation buttonClassName="h-8 w-8" />
           </div>
         </div>
-        {mobileMenuOpen && (
-          <div className="sm:hidden absolute top-full right-3 mt-2 w-40 rounded-md border border-paper-line bg-paper-card p-2 shadow-xl">
-            <Link
-              href="/"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block rounded-sm px-3 py-2 text-sm font-medium text-ink hover:bg-emerald-soft/60"
-            >
-              Directory
-            </Link>
-            <Link
-              href="/about"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block rounded-sm px-3 py-2 text-sm font-medium text-ink hover:bg-emerald-soft/60"
-            >
-              About
-            </Link>
-            <Link
-              href="/guide"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block rounded-sm px-3 py-2 text-sm font-medium text-ink hover:bg-emerald-soft/60"
-            >
-              Eid Guide
-            </Link>
-          </div>
-        )}
       </header>
 
       <div className="sm:hidden flex items-center gap-2 bg-[#EFFFFF] px-3 py-2">
@@ -338,7 +305,10 @@ export default function Home({
 
       {/* Occasion hero — deep themed band with the animated scene for the
           active Eid. Keyed by occasion so switching replays the entrance. */}
-      <section className="hero-band" aria-label={`${occasionLabel(occasion)} — currently showing`}>
+      <section
+        className={`hero-band ${occasion === "eid_al_adha" ? "hero-band-adha" : "hero-band-fitr"}`}
+        aria-label={`${occasionLabel(occasion)} — currently showing`}
+      >
         <div className="hero-image-overlay" aria-hidden />
         <div className="container-narrow relative z-10 py-14 sm:py-14 flex items-center justify-between gap-10">
           <div
