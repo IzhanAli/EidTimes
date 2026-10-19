@@ -3,7 +3,7 @@ export default function SiteFooter() {
     <div className="site-footer-wrap mt-16">
       <footer className="site-footer">
         <img
-          src="/footer-frame.png"
+          src="/footer-frame.png?v=2"
           alt=""
           className="site-footer-art"
           aria-hidden="true"
