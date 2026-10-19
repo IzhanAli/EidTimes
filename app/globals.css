@@ -519,7 +519,7 @@
   position: relative;
   z-index: 2;
   padding-top: 14rem;
-  padding-bottom: 400px;
+  padding-bottom: 200px;
 }
 
 @media (min-width: 1024px) {
@@ -544,7 +544,7 @@
     left: 0;
     width: 100%;
     padding-top: 0;
-    padding-bottom: 400px;
+    padding-bottom: 200px;
     text-align: center;
   }
 
@@ -573,7 +573,7 @@
     left: 0;
     width: 100%;
     padding-top: 0;
-    padding-bottom: 300px;
+    padding-bottom: 200px;
     text-align: center;
     text-shadow: 0 1px 8px rgb(239 255 255 / .95);
   }
