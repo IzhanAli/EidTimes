@@ -16,9 +16,9 @@ import MobileNavigation from "./MobileNavigation";
 // Editorial copy for the hero band, per occasion.
 const OCCASION_HERO: Record<
   Occasion,
-  { subtitle: string; line: string  }
+  { subtitle: string; line: string }
 > = {
-  eid_al_fitr: { 
+  eid_al_fitr: {
     subtitle: "After a Month of Fasting\nComes a Morning of Togetherness",
     line: "After a month of fasting, the community gathers at first light. Find where your city prays — and when.",
   },
@@ -315,12 +315,6 @@ export default function Home({
               occasion === "eid_al_adha" ? "max-w-4xl" : "max-w-3xl"
             }`}
           >
-            <div
-              className="text-[0.68rem] uppercase tracking-[0.22em] font-semibold"
-              style={{ color: "var(--hero-gold)" }}
-            >
-              {OCCASION_HERO[occasion].eyebrow}
-            </div>
             <h1 className={`hero-title mt-3 ${occasion === "eid_al_adha" ? "hero-title-adha" : ""}`}>
               {occasionLabel(occasion)}{" "}
             </h1>
@@ -346,7 +340,7 @@ export default function Home({
           <span className="hero-search-icon" aria-hidden>
             <img src="/loupe.png" alt="" className="h-14 w-14 object-contain" />
           </span>
-          <span className="hero-search-hint" text-light text-sm>
+          <span className="hero-search-hint">
             Click here
           </span>
         </button>

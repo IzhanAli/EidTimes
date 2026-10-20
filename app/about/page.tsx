@@ -2,6 +2,7 @@ import Link from "next/link";
 import { listEidgahs } from "@/lib/db";
 import type { Eidgah } from "@/lib/types";
 import AboutMobileMenu from "@/components/AboutMobileMenu";
+import AddVenueNavigationAction from "@/components/AddVenueNavigationAction";
 import SiteFooter from "@/components/SiteFooter";
 
 export const dynamic = "force-dynamic";
@@ -58,15 +59,15 @@ export default async function AboutPage() {
               </Link>
             </nav>
           </div>
-          <Link href="/" className="btn btn-primary hidden sm:inline-flex">
-            Browse directory
-          </Link>
-          <AboutMobileMenu />
+          <div className="flex items-center gap-2">
+            <AddVenueNavigationAction />
+            <AboutMobileMenu />
+          </div>
         </div>
       </header>
 
       <main className="container-narrow py-12">
-        <Link href="/" className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-emerald hover:underline">
+        <Link href="/" className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-emerald hover:underline sm:hidden">
           <span aria-hidden>←</span>
           Back
         </Link>
