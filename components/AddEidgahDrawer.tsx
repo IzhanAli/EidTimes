@@ -1,10 +1,20 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import { MoonStars, Sparkle, MapPin } from "@phosphor-icons/react";
+import { MoonStars, Sparkle } from "@phosphor-icons/react";
 import type { Eidgah, VenueType } from "@/lib/types";
 import { VENUE_TYPES } from "@/lib/types";
-import { COUNTRIES } from "@/lib/countries";
+import { COUNTRIES, countryName } from "@/lib/countries";
+
+const LocationPicker = dynamic(() => import("./LocationPicker"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[19.5rem] border border-paper-line rounded-sm bg-paper-card grid place-items-center text-ink-muted text-sm">
+      Loading map…
+    </div>
+  ),
+});
 
 type Props = {
   open: boolean;
@@ -91,20 +101,6 @@ export default function AddEidgahDrawer({
 
   function set<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((f) => ({ ...f, [key]: value }));
-  }
-
-  async function useMyLocation() {
-    if (!("geolocation" in navigator)) {
-      setError("Geolocation is not available in this browser.");
-      return;
-    }
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        set("lat", pos.coords.latitude.toFixed(6));
-        set("lng", pos.coords.longitude.toFixed(6));
-      },
-      (err) => setError(err.message || "Could not read your location.")
-    );
   }
 
   async function submit(e: React.FormEvent) {
@@ -264,37 +260,21 @@ export default function AddEidgahDrawer({
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="field-label block mb-1.5">Latitude</label>
-              <input
-                className="field-input font-mono"
-                value={form.lat}
-                onChange={(e) => set("lat", e.target.value)}
-                placeholder="17.385000"
-                inputMode="decimal"
-                required
+          <div>
+            <label className="field-label block mb-1.5">Location</label>
+            {/* Mounted only while open so the closed drawer doesn't load tiles or geocode. */}
+            {open && (
+              <LocationPicker
+                key={editing?.id ?? "new"}
+                lat={form.lat}
+                lng={form.lng}
+                onChange={(lat, lng) => setForm((f) => ({ ...f, lat, lng }))}
+                venueType={form.venue_type}
+                cityQuery={form.city && `${form.city}, ${countryName(form.country)}`}
+                countryCode={form.country}
               />
-            </div>
-            <div>
-              <label className="field-label block mb-1.5">Longitude</label>
-              <input
-                className="field-input font-mono"
-                value={form.lng}
-                onChange={(e) => set("lng", e.target.value)}
-                placeholder="78.486700"
-                inputMode="decimal"
-                required
-              />
-            </div>
+            )}
           </div>
-          <button
-            type="button"
-            onClick={useMyLocation}
-            className="inline-flex items-center gap-1 text-xs text-emerald hover:underline"
-          >
-            <MapPin size={14} weight="fill" /> Use my current location
-          </button>
 
           <div>
             <label className="field-label block mb-1.5">Eid prayer times</label>
